@@ -1,63 +1,350 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
 <HEAD>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <TITLE>3年6組</TITLE>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crimson:    #7a1c2e;
+    --crimson-lt: #a83248;
+    --gold:       #c9a84c;
+    --cream:      #fdf8f2;
+    --warm-gray:  #e8e0d8;
+    --ink:        #2c1a10;
+    --shadow:     rgba(122,28,46,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ─── 背景装飾 ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(201,168,76,.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 90% 100%, rgba(122,28,46,.07) 0%, transparent 60%);
+  }
+
+  /* ─── ヘッダー ─── */
+  header {
+    text-align: center;
+    padding: 56px 24px 40px;
+    position: relative;
+  }
+  header::after {
+    content: '';
+    display: block;
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 28px auto 0;
+  }
+
+  .klass-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: .15em;
+    color: var(--crimson);
+    line-height: 1;
+  }
+  .klass-subtitle {
+    margin-top: 10px;
+    font-size: .85rem;
+    letter-spacing: .25em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .date-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 4px 18px;
+    border: 1px solid var(--warm-gray);
+    border-radius: 20px;
+    font-size: .78rem;
+    letter-spacing: .2em;
+    color: #8a7060;
+  }
+
+  /* ─── ロゴ帯 ─── */
+  .logo-strip {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 24px 16px;
+    opacity: .85;
+  }
+  .logo-strip img {
+    height: 64px;
+    object-fit: contain;
+    transition: transform .2s, opacity .2s;
+  }
+  .logo-strip img:hover { transform: scale(1.08); opacity: 1; }
+
+  /* ─── セクション共通 ─── */
+  .section {
+    max-width: 820px;
+    margin: 0 auto 48px;
+    padding: 0 20px;
+  }
+
+  /* ─── details アコーディオン ─── */
+  details {
+    background: #fff;
+    border: 1px solid var(--warm-gray);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    overflow: hidden;
+  }
+  summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 24px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--crimson);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    transition: background .2s;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: '▶';
+    font-size: .65em;
+    transition: transform .25s;
+    color: var(--gold);
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  summary:hover { background: #fdf3f3; }
+
+  /* ─── 参加者テーブル ─── */
+  .participants-wrap {
+    padding: 0 16px 20px;
+    overflow-x: auto;
+  }
+  .participants-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+    margin-top: 8px;
+  }
+  .participants-table thead tr {
+    background: var(--crimson);
+    color: #fff;
+  }
+  .participants-table thead th {
+    padding: 10px 14px;
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .participants-table tbody tr {
+    border-bottom: 1px solid var(--warm-gray);
+    transition: background .15s;
+  }
+  .participants-table tbody tr:nth-child(even) { background: #fdf8f2; }
+  .participants-table tbody tr:hover { background: #fdf0f0; }
+  .participants-table td {
+    padding: 9px 14px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .participants-table td:first-child { text-align: left; }
+  .circle { color: var(--crimson); font-size: 1.1em; font-weight: 700; }
+  .role-note { color: #8a7060; font-size: .78rem; font-style: italic; }
+
+  /* ─── アルバムグリッド ─── */
+  .album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 24px 24px 28px;
+  }
+  .album-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 14px var(--shadow);
+    transition: transform .25s, box-shadow .25s;
+    background: #fff;
+  }
+  .album-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .album-card a { display: block; text-decoration: none; color: inherit; }
+  .album-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    transition: opacity .2s;
+  }
+  .album-card:hover img { opacity: .92; }
+  .album-label {
+    padding: 10px 14px;
+    font-size: .82rem;
+    letter-spacing: .08em;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Noto Serif JP', serif;
+  }
+  .album-label .video-link {
+    font-size: 1.1em;
+    text-decoration: none;
+    transition: transform .2s;
+    display: inline-block;
+  }
+  .album-label .video-link:hover { transform: scale(1.2); }
+
+  /* ─── メモ ─── */
+  .memo-body {
+    padding: 16px 24px 20px;
+    font-size: .88rem;
+    line-height: 1.9;
+    color: #5a4a40;
+  }
+  .memo-body .memo-date {
+    font-size: .75rem;
+    letter-spacing: .12em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ─── フッター ─── */
+  footer {
+    text-align: center;
+    padding: 32px 16px 40px;
+    font-size: .72rem;
+    letter-spacing: .15em;
+    color: #b0a090;
+  }
+  footer::before {
+    content: '';
+    display: block;
+    width: 60px; height: 1px;
+    background: var(--warm-gray);
+    margin: 0 auto 16px;
+  }
+</style>
 </HEAD>
+<BODY>
 
-<BODY bgcolor="#ffffff" text="#800000">
+<header>
+  <p class="klass-subtitle">Class Reunion</p>
+  <h1 class="klass-title">3年6組</h1>
+  <span class="date-badge">2026.3.8</span>
+</header>
 
-2026.3.8
-<details><summary>参加者</summary>
-<TABLE BORDER="1" CELLSPACING="1" BORDERCOLOR="#800000" CELLPADDING="3">
-  <TD><CENTER><b> LINEの名前 	<TD><CENTER><b> 151103 	<TD><CENTER><b> 260308	<TD><CENTER><i><b>65歳の時	<TR>
-  <TD><CENTER> 力石（伏木）美智子<TD><CENTER>〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 北川厚志		<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 榊（北脇）恵理子	<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER><i>幹事予定	<TR>
-  <TD><CENTER> じゅんこ		<TD><CENTER> 〇		<TD><CENTER>		<TD><CENTER>		<TR>
-  <TD><CENTER> 小八木敏行	<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER><i>幹事予定	<TR>
-  <TD><CENTER> 田中		<TD><CENTER> 		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 田中（１，２，３，ダー）<TD>		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> ともこ		<TD><CENTER> 		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 西出和司		<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 西村均		<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> のぐっちゃん	<TD>			<TD><CENTER> 		<TD><CENTER>		<TR>
-  <TD><CENTER> 林雅子		<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> はやし		<TD><CENTER> 		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> みか/Mika	<TD>			<TD><CENTER> 		<TD><CENTER>		<TR>
-  <TD><CENTER> みなみひかる	<TD><CENTER> 〇		<TD><CENTER> 		<TD><CENTER>		<TR>
-  <TD><CENTER> Atsuko		<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 磯崎隆史		<TD><CENTER> 〇		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-  <TD><CENTER> 野村京子		<TD><CENTER> 〇		<TD><CENTER> 		<TD><CENTER>		<TR>
-  <TD><CENTER> 寺田順勝		<TD><CENTER> 		<TD><CENTER> 〇		<TD><CENTER>		<TR>
-</TABLE>
-</details><p>
+<!-- ロゴ帯 -->
+<div class="logo-strip">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+  <img src="BYD/ロゴ_36.jpg" alt="3年6組ロゴ">
+</div>
 
-<CENTER>
+<!-- アルバム -->
+<div class="section">
+  <details open>
+    <summary>アルバム</summary>
+    <div class="album-grid">
+      <div class="album-card">
+        <a href="1511宝山園/album.html" target="_blank">
+          <img src="1511宝山園/1511宝山園.JPG" alt="1511宝山園">
+        </a>
+        <div class="album-label">1511 宝山園</div>
+      </div>
+      <div class="album-card">
+        <a href="2603平兵衛庵/index.html" target="_blank">
+          <img src="2603平兵衛庵/2603平兵衛庵.jpg" alt="2603平兵衛庵">
+        </a>
+        <div class="album-label">
+          2603 平兵衛庵
+          <a class="video-link" href="https://drive.google.com/file/d/1XXjz9UF259Y1wNCsRDiUue67-Vr9wm2X/view?usp=drive_link" target="_blank" title="動画を見る">🎦</a>
+        </div>
+      </div>
+    </div>
+  </details>
+</div>
 
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<IMG SRC="BYD/ロゴ_36.jpg" HEIGHT="80">
-<P>
+<!-- 参加者 -->
+<div class="section">
+  <details>
+    <summary>参加者</summary>
+    <div class="participants-wrap">
+      <table class="participants-table">
+        <thead>
+          <tr>
+            <th>LINEの名前</th>
+            <th>151103</th>
+            <th>260308</th>
+            <th>65歳の時</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>力石（伏木）美智子</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>北川厚志</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>榊（北脇）恵理子</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td><span class="role-note">幹事予定</span></td></tr>
+          <tr><td>じゅんこ</td><td><span class="circle">〇</span></td><td></td><td></td></tr>
+          <tr><td>小八木敏行</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td><span class="role-note">幹事予定</span></td></tr>
+          <tr><td>田中</td><td></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>田中（１，２，３，ダー）</td><td></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>ともこ</td><td></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>西出和司</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>西村均</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>のぐっちゃん</td><td></td><td></td><td></td></tr>
+          <tr><td>林雅子</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>はやし</td><td></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>みか / Mika</td><td></td><td></td><td></td></tr>
+          <tr><td>みなみひかる</td><td><span class="circle">〇</span></td><td></td><td></td></tr>
+          <tr><td>Atsuko</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>磯崎隆史</td><td><span class="circle">〇</span></td><td><span class="circle">〇</span></td><td></td></tr>
+          <tr><td>野村京子</td><td><span class="circle">〇</span></td><td></td><td></td></tr>
+          <tr><td>寺田順勝</td><td></td><td><span class="circle">〇</span></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>
 
-<TABLE BORDER="1" CELLSPACING="1" BORDERCOLOR="#89a5e2" CELLPADDING="1">
-  <TD WIDTH="160"><CENTER><a href="1511宝山園/album.html" target="_blank">
-    <IMG SRC="1511宝山園/1511宝山園.JPG" BORDER="0" HEIGHT="160" ></a>
-  <TD WIDTH="160"><CENTER><a href="2603平兵衛庵/index.html" target="_blank">
-    <IMG SRC="2603平兵衛庵/2603平兵衛庵.jpg" BORDER="0" HEIGHT="160" ></a>
-<TR>
-  <TD><CENTER> 1511宝山園
-  <TD><CENTER> 2603平兵衛庵<a href="https://drive.google.com/file/d/1XXjz9UF259Y1wNCsRDiUue67-Vr9wm2X/view?usp=drive_link" target="_blank"> 🎦</a>
-</TABLE><br><P>
+<!-- メモ -->
+<div class="section">
+  <details>
+    <summary>メモ</summary>
+    <div class="memo-body">
+      <span class="memo-date">2026.3.11</span>
+      ホームページ公開。⇒ そのうちパスワードかけます。<br><br>
+      料理おいしかったですねぇ。特に刺身がグッドでした。でも、お店の名前が読めん～
+    </div>
+  </details>
+</div>
 
-</CENTER><br>
+<footer>3年6組 &nbsp;|&nbsp; Class of 36</footer>
 
-<details><summary>memo</summary>
-
-(2026.3.11) ホームページ公開。⇒そのうちパスワードかけます。<br>
-・料理おいしかったですねぇ。特に刺身がグッドでした。でも、お店の名前が読めん～<br>
-
-</BODY></HTML>
+</BODY>
+</html>
